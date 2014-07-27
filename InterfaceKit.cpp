@@ -43,16 +43,16 @@ InterfaceKit::InterfaceKit()
 int InterfaceKit::inputChangeHandler(int index, int state)
 {
     if ((index == HALL_EFFECT_INDEX) && (state == 1)) {
-        count++;
+        ifkit.output[0]=true;
+        running = false;
     }
     
     if ((index == MISSION_GO_INDEX) && (state == 1)) {
+        ifkit.output[0]=false;
         running = true;
     }
     
-    if ((index == MISSION_GO_INDEX) && (state == 0)) {
-        running = false;
-    }
+    if ((index == ))
     
     return 0;
 }
