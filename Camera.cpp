@@ -127,20 +127,5 @@ bitmap_image Camera::getFrame(){
       image.set_pixel(i,k,red,green,blue);
     }
   }
-  // unsigned long m = 10;
-  // // read(fd, trash, 1);
-  // // read(fd, trash + 1, 1);
-  // // read(fd, trash + 2, 1);
-  // // std::cout << trash[0] << trash[1] << trash[2] << std::endl;
-  // const unsigned long IMGSIZE = 60*80*2+80*5+4;
-  // for(unsigned long i = 0; i < IMGSIZE; i++){
-  //   read(fd,&c,1);
-  //   image.push_back(c);
-  //   // if(image.size()==3){
-  //   //   m = 0;
-  //   //   m |= (image[1] << 16);
-  //   //   m |= (image[2]);
-  //   // }
-  // }
   return image;
 }

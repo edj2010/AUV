@@ -18,13 +18,13 @@ class Motor
 public:
     Motor();
     
-    float getLeftSpeed() { return leftSpeed; }
-    float getRightSpeed() { return rightSpeed; }
+    int getLeftSpeed() { return leftSpeed; }
+    int getRightSpeed() { return rightSpeed; }
 
-    void setLeftSpeed(float leftSpeed);
-    void setRightSpeed(float rightSpeed);
+    void setLeftSpeed(int leftSpeed);
+    void setRightSpeed(int rightSpeed);
     
-    void setSpeed(float speed);
+    void setSpeed(int speed);
     
     int getCenterPos() { return centerPos; }
     void setCenterPos(int centerPos);
@@ -42,13 +42,13 @@ public:
 private:
     CPhidgetAdvancedServoHandle servo;
 
-    float leftSpeed;
-    float rightSpeed;
-    float centerPos;
+    int leftSpeed;
+    int rightSpeed;
+    int centerPos;
     
-    float leftPrevSpeed;
-    float rightPrevSpeed;
-    float centerPrevPos;
+    int leftPrevSpeed;
+    int rightPrevSpeed;
+    int centerPrevPos;
 
     float minRate;
     float maxRate;
@@ -58,8 +58,6 @@ private:
     double currPos;
     const char *err;
     double minAccel, maxVel;
-    
-    double diff(double degA, double degB);
 };
 
 #endif // MOTOR_H

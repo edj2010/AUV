@@ -1,17 +1,14 @@
 #include "Eyes.h"
 
 Eyes::Eyes(){
-  //Camera c;
-  //this->c = c;
+  Camera c;
+  this->c = c;
 }
 
 Eyes::Eyes(Camera c){
   this->c = c;
 }
-void Eyes::saveFrame(){
-  bitmap_image frame = c.getFrame();
-  frame.save_image("eyes.bmp");
-}
+
 int Eyes::diff(int x, int y){
   if(x>y){
     return x-y;
@@ -19,12 +16,27 @@ int Eyes::diff(int x, int y){
   return y-x;
 }
 
-double Eyes::findCentroids(int row, bitmap_image line, const int lineColour[3], const int colourError, const int COLUMNS){
+double Eyes::findCentroidsR(int row, bitmap_image line, const int lineColour[3], const int colourError, const int COLUMNS){
   int div = 0;
   int total = 0;
   for(int i = 0; i < COLUMNS; i++){
     unsigned char red, green, blue;
     line.get_pixel(i,row,red,green,blue);
+    if(diff(red, lineColour[0]) < colourError and diff(green, lineColour[1]) < colourError and diff(blue, lineColour[2]) < colourError){
+      int weight = (colourError-diff(red,lineColour[0]))+(colourError-diff(green,lineColour[1]))+(colourError-diff(blue,lineColour[2]));
+      div += weight;
+      total += weight*i;
+    }
+  }
+  return ((double)total)/div;
+}
+
+double Eyes::findCentroidsC(int column, bitmap_image line, const int lineColour[3], const int colourError, const int ROWS){
+  int div = 0;
+  int total = 0;
+  for(int i = 0; i < ROWS; i++){
+    unsigned char red, green, blue;
+    line.get_pixel(column,i,red,green,blue);
     if(diff(red, lineColour[0]) < colourError and diff(green, lineColour[1]) < colourError and diff(blue, lineColour[2]) < colourError){
       int weight = (colourError-diff(red,lineColour[0]))+(colourError-diff(green,lineColour[1]))+(colourError-diff(blue,lineColour[2]));
       div += weight;
@@ -44,7 +56,7 @@ double Eyes::getErrorLine(int r, int g, int b, int pres, int error){
   const int COLOURERROR = error;
   double centroids[ROWS/PRECISION];
   for(int r = 0; r < ROWS; r+=PRECISION){
-    centroids[r/PRECISION] = findCentroids(r, line, LINECOLOUR, COLOURERROR, COLUMNS);
+    centroids[r/PRECISION] = findCentroidsR(r, line, LINECOLOUR, COLOURERROR, COLUMNS);
   }
   double avg=0;
   int count=0;
@@ -54,7 +66,30 @@ double Eyes::getErrorLine(int r, int g, int b, int pres, int error){
       count++;
     }
   }
-  return avg/count;
+  return (avg/count)/PRECISION;
 }
 
-double Eyes::getErrorCenter(int r, int g, int b, int pres, int error){return 0;}//to be implemented
+double* Eyes::getErrorCenter(int r, int g, int b, int pres, int error){
+  bitmap_image line(c.getFrame());
+  const int ROWS = 60;
+  const int COLUMNS = 80;
+  const int PRECISION = pres;//number of line skips
+  const int LINECOLOUR[3] = {r,g,b};
+  const int COLOURERROR = error;
+  double avg=0;
+  int count=0;
+  for(int r = 0; r < ROWS; r+=PRECISION){
+    avg += findCentroidsR(r, line, LINECOLOUR, COLOURERROR, COLUMNS);
+    count++;
+  }
+  double hCent=avg/count;
+  avg=0;
+  count=0;
+  for(int C = 0; C < COLUMNS; C+=PRECISION){
+    avg+= FindCentroidsC(C, line, LINECOLOUR, COLOURERROR, COLUMNS);
+    count++;
+  }
+  double vCent=avg/count;
+  double* coords={hCent,vCent};
+  return coords;
+}

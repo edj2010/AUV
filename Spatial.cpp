@@ -17,7 +17,7 @@ Spatial::Spatial()
 {
     CPhidgetSpatial_create(&spatial);
     CPhidget_open((CPhidgetHandle)spatial, -1);
-    if(CPhidget_waitForAttachment((CPhidgetHandle)spatial, 10000)) {
+    if(CPhidget_waitForAttachment((CPhidgetHandle)spatial, 1000)) {
         std::cout << "Error attaching Phidget Spatial." << std::endl;
     }
     
@@ -33,17 +33,17 @@ int Spatial::spatialDataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, in
             acceleration[j] = data[i]->acceleration[j];
             angularRate[j] = data[i]->angularRate[j];
             magneticField[j] = data[i]->magneticField[j];
-	    //std::cout << acceleration[j] << " ";
         }
     }
-    //std::cout << std::endl;
     
 	return 0;
 }
 
 void Spatial::printProperties()
 {
-    //to be implented
+    std::cout << "acc: " << acceleration[0] << " " << acceleration[1] << " " << acceleration[2] << std::endl;
+    std::cout << "ang: " << angularRate[0] << " " << angularRate[1] << " " << angularRate[2] << std::endl;
+    std::Cout << "mag: " << magneticField[0] << " " << magneticField[1] << " " << magneticField[2] << std::endl;
 }
 
 void Spatial::zeroGyro()

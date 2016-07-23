@@ -22,21 +22,20 @@ Motor::Motor()
     
     CPhidgetAdvancedServo_setPosition (servo, LEFT_MOTOR, LEFT_STOP_RATE);
     CPhidgetAdvancedServo_getAccelerationMin(servo, LEFT_MOTOR, &minAccel);
-    CPhidgetAdvancedServo_setAcceleration(servo, LEFT_MOTOR, minAccel*4/3);
+    CPhidgetAdvancedServo_setAcceleration(servo, LEFT_MOTOR, minAccel*2);
     CPhidgetAdvancedServo_getVelocityMax(servo, LEFT_MOTOR, &maxVel);
-    CPhidgetAdvancedServo_setVelocityLimit(servo, LEFT_MOTOR, maxVel/3);
+    CPhidgetAdvancedServo_setVelocityLimit(servo, LEFT_MOTOR, maxVel/2);
     CPhidgetAdvancedServo_setEngaged(servo, LEFT_MOTOR, 1);
     
-    CPhidgetAdvancedServo_setPosition (servo, RIGHT_MOTOR, LEFT_STOP_RATE);
+        CPhidgetAdvancedServo_setPosition (servo, RIGHT_MOTOR, RIGHT_STOP_RATE);
     CPhidgetAdvancedServo_getAccelerationMin(servo, RIGHT_MOTOR, &minAccel);
-    CPhidgetAdvancedServo_setAcceleration(servo, RIGHT_MOTOR, minAccel*4/3);
+    CPhidgetAdvancedServo_setAcceleration(servo, RIGHT_MOTOR, minAccel*2);
     CPhidgetAdvancedServo_getVelocityMax(servo, RIGHT_MOTOR, &maxVel);
-    CPhidgetAdvancedServo_setVelocityLimit(servo, RIGHT_MOTOR, maxVel/3);
+    CPhidgetAdvancedServo_setVelocityLimit(servo, RIGHT_MOTOR, maxVel/2);
     CPhidgetAdvancedServo_setEngaged(servo, RIGHT_MOTOR, 1);
-    setSpeed(0);
 }
 
-void Motor::setLeftSpeed(float leftSpeed)
+void Motor::setLeftSpeed(int leftSpeed)
 {
     leftPrevSpeed = leftSpeed;
     this->leftSpeed = leftSpeed;
@@ -44,7 +43,7 @@ void Motor::setLeftSpeed(float leftSpeed)
     commit();
 }
 
-void Motor::setRightSpeed(float rightSpeed)
+void Motor::setRightSpeed(int rightSpeed)
 {
     rightPrevSpeed = rightSpeed;
     this->rightSpeed = rightSpeed;
@@ -52,13 +51,13 @@ void Motor::setRightSpeed(float rightSpeed)
     commit();
 }
 
-void Motor::setSpeed(float speed)
+void Motor::setSpeed(int speed)
 {
     leftPrevSpeed = leftSpeed;
-    leftSpeed = speed;
+    leftSpeed = speed-10;
     
     rightPrevSpeed=rightSpeed;
-    rightSpeed = speed;
+    rightSpeed = speed+5;
     
     commit();
 }
@@ -111,35 +110,14 @@ void Motor::commit()
 {
     float left;
     float right;
-//    float center;
 
-    left = leftSpeed + LEFT_STOP_RATE-10;
-    right = rightSpeed + RIGHT_STOP_RATE-30;
-    std::cout << LEFT_STOP_RATE << " " << RIGHT_STOP_RATE << std::endl;
-    
-//    center = (float)(diff(centerPos, centerPrevPos) * (5/9));
-    centerPrevPos = centerPos;
+
+    left = leftSpeed + LEFT_STOP_RATE;
+    right = rightSpeed + RIGHT_STOP_RATE;
+
 
     CPhidgetAdvancedServo_setPosition (servo, LEFT_MOTOR, left);
-//    CPhidgetAdvancedServo_setPosition (servo, CENTER_MOTOR, centerPos);
     CPhidgetAdvancedServo_setPosition (servo, RIGHT_MOTOR, right);
     
     std::cout << left << " " << right << std::endl;
 }
-
-//double Motor::diff(double degA, double degB){
-//    double diffA=degA-degB;
-//    if(degA>degB){
-//        degB+= 360;
-//    }
-//    else{
-//        degA+=360;
-//    }
-//    double diffB=degA-degB;
-//    if(std::abs(diffA)<std::abs(diffB)){
-//        return diffA;
-//    }
-//    else{
-//        return diffB;
-//    }
-//}

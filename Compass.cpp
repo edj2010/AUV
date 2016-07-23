@@ -41,9 +41,9 @@ int Compass::initializeInterface(int speed)
     
     cfsetspeed (&tty, speed); // set the BAUD Rate
     
-    cfmakeraw(&tty);          // simplest version IO
+	cfmakeraw(&tty);          // simplest version IO
     tty.c_cflag = (tty.c_cflag | CS8);// 8-bit chars
-    tty.c_cflag &= ~CSTOPB;           // One Stop Bit
+	tty.c_cflag &= ~CSTOPB;           // One Stop Bit
     tty.c_cflag &= ~CRTSCTS;          // No Hardware Flow Control
     
     tty.c_cc[VMIN]  = 0;            // read doesn't block
